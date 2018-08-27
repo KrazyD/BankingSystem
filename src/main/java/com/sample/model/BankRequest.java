@@ -1,16 +1,38 @@
 package com.sample.model;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
-public class BankRequest {
+@Entity
+public class BankRequest implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+
+    @Column(name = "numberOfRequest")
     private Integer numberOfRequest;
+
+    @Column(name = "client")
     private String client;
+
+    @Column(name = "nameOfService")
     private String nameOfService;
+
+    @Column(name = "created")
     private Date created;
+
+    @Column(name = "lastChanged")
     private Date lastChanged;
+
+    @Column(name = "status")
     private String status;
+
+    @Column(name = "comment")
     private String comment;
+
+    public BankRequest() { }
 
     public BankRequest(Integer numberOfRequest, String client, String nameOfService, Date created, Date lastChanged, String status, String comment) {
         this.numberOfRequest = numberOfRequest;
@@ -77,4 +99,20 @@ public class BankRequest {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return id + " " + numberOfRequest + " " +
+                client + " " + nameOfService + " " + created + " " +
+                lastChanged + " " + status + " " + comment;
+    }
+
 }
