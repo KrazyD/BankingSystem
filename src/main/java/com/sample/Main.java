@@ -15,15 +15,17 @@ public class Main {
 
         sqLiteConnector = SQLiteConnector.getInstance();
 
-        BankRequest bankRequest = new BankRequest(1, "Петров Василий Петрович",
-                "кредит", new Date(), new Date(), "Новая", "Комментарий");
+        // Написать тесты для проверки методов БД
 
-        sqLiteConnector.createRequest(bankRequest);
-
-        List<BankRequest> data = sqLiteConnector.getTableData();
-
-        for (BankRequest request: data) {
-            System.out.println(request);
-        }
+//        BankRequest bankRequest = new BankRequest(1, "Петров Василий Петрович",
+//                "кредит", new Date(), new Date(), "Новая", "Комментарий");
+//
+//        sqLiteConnector.createRequest(bankRequest);
+//
+//        List<BankRequest> data = sqLiteConnector.getTableData();
+//
+//        for (BankRequest request: data) {
+//            System.out.println(request);
+//        }
     }
 }

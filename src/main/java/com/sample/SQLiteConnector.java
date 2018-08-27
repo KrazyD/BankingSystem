@@ -141,48 +141,35 @@ public class SQLiteConnector {
         return tableData;
     }
 
-//    public List<BankRequest> getWeatherByFilter(HashMap<String, String> params) {
-//        List<BankRequest> tableData;
-//        Session session = null;
-//
-//        try
-//        {
-//            session = sessionFactory.openSession();
-//            Criteria criteria = session.createCriteria(BankRequest.class);
-//
-//            for (Map.Entry entry : params.entrySet()) {
-//
-//                if (entry.getValue())
-//
-//                criteria.add(Restrictions.eq((String) entry.getKey(), entry.getValue()));
-//
-//                System.out.println("Key: " + entry.getKey() + " Value: "
-//                        + entry.getValue());
-//            }
-//
-//
-//            if (startDateStr.length() != 0) {
-//                Date startDate = formatter.parse(startDateStr + " 00:00:00");
-//                criteria.add(Restrictions.ge("date", startDate));
-//            }
-//            if (endDateStr.length() != 0) {
-//                Date endDate = formatter.parse(endDateStr + " 23:59:59");
-//                criteria.add(Restrictions.le("date", endDate));
-//            }
-//            if (!city.equals("none")) {
-//                criteria.add(Restrictions.eq("city", city));
-//            }
-//            tableData = criteria.list();
-//            session.flush();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            tableData = new ArrayList<>();
-//        } finally {
-//            if (session != null) {
-//                session.close();
-//            }
-//        }
-//
-//        return tableData;
-//    }
+    public List<BankRequest> getRequestsByFilter(HashMap<String, String> params) {
+
+        if (params.size() == 0) {
+            return new ArrayList<>();
+        }
+
+        List<BankRequest> tableData;
+        Session session = null;
+
+        try
+        {
+            session = sessionFactory.openSession();
+            Criteria criteria = session.createCriteria(BankRequest.class);
+
+            for (Map.Entry entry : params.entrySet()) {
+                criteria.add(Restrictions.eq((String) entry.getKey(), entry.getValue()));
+            }
+
+            tableData = criteria.list();
+            session.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+            tableData = new ArrayList<>();
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+
+        return tableData;
+    }
 }
