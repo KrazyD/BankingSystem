@@ -14,5 +14,6 @@
         <property name="hibernate.hbm2ddl.auto">update</property>
 
         <mapping class="com.sample.model.BankRequest"/>
+        <mapping class="com.sample.model.AuditData"/>
     </session-factory>
 </hibernate-configuration>

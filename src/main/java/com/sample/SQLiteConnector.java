@@ -1,5 +1,9 @@
 package com.sample;
 
+import com.sample.enums.ActionTypes;
+import com.sample.enums.OperationTypes;
+import com.sample.enums.RequestStatuses;
+import com.sample.model.AuditData;
 import com.sample.model.BankRequest;
 
 import org.hibernate.*;
@@ -43,10 +47,14 @@ public class SQLiteConnector {
         Transaction tx = null;
 
         try {
+            AuditData auditData = new AuditData(request.getClient(),
+                    ActionTypes.SENDING_REQUEST, OperationTypes.CREATING, new Date());
+
             session = sessionFactory.openSession();
             tx = session.beginTransaction();
 
             session.save(request);
+            session.save(auditData);
 
             session.flush();
             tx.commit();
@@ -102,7 +110,7 @@ public class SQLiteConnector {
             tx = session.beginTransaction();
 
             BankRequest loadedRequest = (BankRequest) session.load(BankRequest.class, request.getId());
-            loadedRequest.setStatus("Отозвана");
+            loadedRequest.setStatus(RequestStatuses.WITHDRAWN);
             loadedRequest.setLastChanged(new Date());
             session.update(loadedRequest);
 
@@ -156,6 +164,7 @@ public class SQLiteConnector {
             Criteria criteria = session.createCriteria(BankRequest.class);
 
             for (Map.Entry entry : params.entrySet()) {
+                //                           (Столбец,                значение)
                 criteria.add(Restrictions.eq((String) entry.getKey(), entry.getValue()));
             }
 

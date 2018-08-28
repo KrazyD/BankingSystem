@@ -1,40 +1,43 @@
 package com.sample.model;
 
+import com.sample.enums.RequestStatuses;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
+@Table(name = "bank_request")
 public class BankRequest implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @Column(name = "numberOfRequest")
+    @Column(name = "number_of_request")
     private Integer numberOfRequest;
 
     @Column(name = "client")
     private String client;
 
-    @Column(name = "nameOfService")
+    @Column(name = "name_of_service")
     private String nameOfService;
 
     @Column(name = "created")
     private Date created;
 
-    @Column(name = "lastChanged")
+    @Column(name = "last_changed")
     private Date lastChanged;
 
     @Column(name = "status")
-    private String status;
+    private RequestStatuses status;
 
     @Column(name = "comment")
     private String comment;
 
     public BankRequest() { }
 
-    public BankRequest(Integer numberOfRequest, String client, String nameOfService, Date created, Date lastChanged, String status, String comment) {
+    public BankRequest(Integer numberOfRequest, String client, String nameOfService, Date created, Date lastChanged, RequestStatuses status, String comment) {
         this.numberOfRequest = numberOfRequest;
         this.client = client;
         this.nameOfService = nameOfService;
@@ -84,11 +87,11 @@ public class BankRequest implements Serializable {
         this.lastChanged = lastChanged;
     }
 
-    public String getStatus() {
+    public RequestStatuses getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(RequestStatuses status) {
         this.status = status;
     }
 
