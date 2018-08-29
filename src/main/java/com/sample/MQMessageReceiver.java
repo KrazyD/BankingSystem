@@ -1,9 +1,7 @@
 package com.sample;
 
-
 import org.apache.activemq.ActiveMQConnectionFactory;
 import javax.jms.*;
-import javax.naming.InitialContext;
 
 public class MQMessageReceiver implements Runnable {
     public void run() {
@@ -13,28 +11,17 @@ public class MQMessageReceiver implements Runnable {
             QueueConnection connection = connectionFactory.createQueueConnection();
             connection.start();
 
-
             QueueSession session = connection.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
-
-            Queue sessionQueue = session.createQueue("clientQueue");
-//            Queue sessionQueue = (Queue) context.lookup("clientQueue");
-
-            QueueReceiver receiver = session.createReceiver(sessionQueue);
+            Queue requestQueue = session.createQueue("requestQueue");
+            QueueReceiver receiver = session.createReceiver(requestQueue);
             MQListener listener = new MQListener();
             receiver.setMessageListener(listener);
 
-//            Session session = connection.createSession(false,Session.AUTO_ACKNOWLEDGE);
-//            Queue destination = session.createQueue("serverQueue");
-//            MessageConsumer consumer = session.createConsumer(destination);
-
             while (true) {
-//                Message message = consumer.receive();
-//                System.out.println(message);
                 Thread.sleep(5000);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 }

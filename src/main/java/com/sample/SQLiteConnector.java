@@ -64,6 +64,7 @@ public class SQLiteConnector {
             if (tx != null) {
                 tx.rollback();
             }
+            throw ex;
         } finally {
             if (session != null) {
                 session.close();

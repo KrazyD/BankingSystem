@@ -1,6 +1,7 @@
 package com.sample;
 
 
+import com.sample.enums.LoggerTypes;
 import com.sample.enums.RequestStatuses;
 import com.sample.model.BankRequest;
 
@@ -61,17 +62,25 @@ public class Main {
 //
 //        int q = 0;
 
+        LoggerWriter obj = new LoggerWriter();
+        obj.createMessage(LoggerTypes.WARN, "Test message");
+
         MQMessageReceiver messageReceiver = new MQMessageReceiver();
         Thread thread = new Thread(messageReceiver);
-//        thread.setDaemon(true);
+        thread.setDaemon(true);
         thread.start();
-        while (true) {
-            System.out.println("Working");
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+
+        ResponderToServer responder = new ResponderToServer();
+        Thread thread1 = new Thread(responder);
+        thread1.setDaemon(true);
+        thread1.start();
+//        while (true) {
+//            System.out.println("Working");
+//            try {
+//                Thread.sleep(1000);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 }

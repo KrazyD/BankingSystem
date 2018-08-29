@@ -7,12 +7,14 @@ public class MQListener implements MessageListener {
     public void onMessage(Message m) {
         try {
 
+            ResponderToServer.getBlockingQueue().put(m);
+
             TextMessage msg = (TextMessage) m;
 
-            System.out.println("following message is received: " + msg.getText());
-            System.out.println("Property " + msg.getStringProperty("name"));
-        } catch (JMSException e) {
-            System.out.println(e);
+            System.out.println("Message with action is received " + msg.getStringProperty("action"));
+            System.out.println("BankRequest " + msg.getObjectProperty("request"));
+        } catch (JMSException | InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
