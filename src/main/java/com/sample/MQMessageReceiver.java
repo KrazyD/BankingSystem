@@ -18,9 +18,15 @@ public class MQMessageReceiver implements Runnable {
             receiver.setMessageListener(listener);
 
             while (true) {
-                Thread.sleep(5000);
+
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    break;
+                }
             }
-        } catch (Exception e) {
+        } catch (JMSException e) {
             e.printStackTrace();
         }
     }

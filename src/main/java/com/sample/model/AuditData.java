@@ -9,8 +9,9 @@ import java.util.Date;
 @Table(name = "audit_data")
 public class AuditData implements Serializable {
 
-    public AuditData(String client, ActionTypes action, OperationTypes operation, Date date) {
-        this.client = client;
+    public AuditData() {}
+
+    public AuditData(ActionTypes action, OperationTypes operation, Date date) {
         this.action = action;
         this.operation = operation;
         this.date = date;
@@ -19,9 +20,6 @@ public class AuditData implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-
-    @Column(name = "client")
-    private String client;
 
     @Column(name = "action")
     private ActionTypes action;
@@ -38,14 +36,6 @@ public class AuditData implements Serializable {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getClient() {
-        return client;
-    }
-
-    public void setClient(String client) {
-        this.client = client;
     }
 
     public ActionTypes getAction() {

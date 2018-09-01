@@ -8,12 +8,7 @@ public class MQListener implements MessageListener {
         try {
 
             ResponderToServer.getBlockingQueue().put(m);
-
-            TextMessage msg = (TextMessage) m;
-
-            System.out.println("Message with action is received " + msg.getStringProperty("action"));
-            System.out.println("BankRequest " + msg.getObjectProperty("request"));
-        } catch (JMSException | InterruptedException e) {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

@@ -1,5 +1,6 @@
 package com.sample;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sample.model.BankRequest;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTextMessage;
@@ -40,7 +41,7 @@ public class ResponderToServer implements Runnable {
             while (true) {
                 if (blockingQueue.size() > 0) {
                     message = blockingQueue.take();
-                    publisher.send(message);
+                    publisher.send(processingRecivedMessage(message));
                 }
 
                 try {
@@ -57,14 +58,19 @@ public class ResponderToServer implements Runnable {
 
     }
 
-    public Message processingRecivedMessage(Message message) throws JMSException {
+    private Message processingRecivedMessage(Message message) throws JMSException {
         Message returnedMessage = new ActiveMQTextMessage();
         SQLiteConnector connector = SQLiteConnector.getInstance();
         switch (message.getStringProperty("action")) {
             case "create": {
                 try {
-                    connector.createRequest((BankRequest) message.getObjectProperty("bankRequest"));
+                    String request = message.getStringProperty("bankRequest");
+                    BankRequest bankRequest = new ObjectMapper().readValue(request, BankRequest.class);
+                    connector.createRequest(bankRequest);
+
                     returnedMessage.setStringProperty("status", "ok");
+                    String response = new ObjectMapper().writeValueAsString(bankRequest);
+                    returnedMessage.setStringProperty("response", response);
                 } catch (Exception e) {
                     e.printStackTrace();
                     returnedMessage.setStringProperty("status", "error");
@@ -74,8 +80,13 @@ public class ResponderToServer implements Runnable {
             }
             case "edit": {
                 try {
-                    connector.editRequest((BankRequest) message.getObjectProperty("bankRequest"));
+                    String request = message.getStringProperty("bankRequest");
+                    BankRequest bankRequest = new ObjectMapper().readValue(request, BankRequest.class);
+
+                    connector.editRequest(bankRequest);
                     returnedMessage.setStringProperty("status", "ok");
+                    String response = new ObjectMapper().writeValueAsString(bankRequest);
+                    returnedMessage.setStringProperty("response", response);
                 } catch (Exception e) {
                     e.printStackTrace();
                     returnedMessage.setStringProperty("status", "error");
@@ -83,10 +94,13 @@ public class ResponderToServer implements Runnable {
                 }
                 break;
             }
-            case "withdraw": {
+            case "withdrawn": {
                 try {
-                    connector.withdrawRequest((BankRequest) message.getObjectProperty("bankRequest"));
+                    String request = message.getStringProperty("bankRequest");
+                    BankRequest bankRequest = new ObjectMapper().readValue(request, BankRequest.class);
+                    connector.withdrawRequest(bankRequest);
                     returnedMessage.setStringProperty("status", "ok");
+                    returnedMessage.setStringProperty("response", "{ \"Message\": \"Request was withdrawn\" }");
                 } catch (Exception e) {
                     e.printStackTrace();
                     returnedMessage.setStringProperty("status", "error");
@@ -100,7 +114,7 @@ public class ResponderToServer implements Runnable {
                         List<BankRequest> filteredRequests = connector.getRequestsByFilter(
                                 (HashMap<String, String>) message.getObjectProperty("params"));
                         returnedMessage.setStringProperty("status", "ok");
-                        returnedMessage.setObjectProperty("filteredRequests", filteredRequests);
+                        returnedMessage.setObjectProperty("response", filteredRequests);
                     } else {
                         returnedMessage.setStringProperty("status", "error");
                         returnedMessage.setStringProperty("errorMessage", "Type of params does not match HashMap");
