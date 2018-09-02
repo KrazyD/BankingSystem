@@ -6,6 +6,8 @@ import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTextMessage;
 
 import javax.jms.*;
+import javax.swing.plaf.synth.SynthToolTipUI;
+import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -110,15 +112,13 @@ public class ResponderToServer implements Runnable {
             }
             case "filter": {
                 try {
-                    if (message.getObjectProperty("params") instanceof HashMap) {
-                        List<BankRequest> filteredRequests = connector.getRequestsByFilter(
-                                (HashMap<String, String>) message.getObjectProperty("params"));
-                        returnedMessage.setStringProperty("status", "ok");
-                        returnedMessage.setObjectProperty("response", filteredRequests);
-                    } else {
-                        returnedMessage.setStringProperty("status", "error");
-                        returnedMessage.setStringProperty("errorMessage", "Type of params does not match HashMap");
-                    }
+
+                    HashMap<String, String> params = new ObjectMapper().readValue(message.getStringProperty("params"),
+                            HashMap.class);
+
+                    List<BankRequest> filteredRequests = connector.getRequestsByFilter(params);
+                    returnedMessage.setStringProperty("status", "ok");
+                    returnedMessage.setObjectProperty("response", filteredRequests);
                 } catch (Exception e) {
                     e.printStackTrace();
                     returnedMessage.setStringProperty("status", "error");
