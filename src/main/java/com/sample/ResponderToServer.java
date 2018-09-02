@@ -58,7 +58,7 @@ public class ResponderToServer implements Runnable {
 
     }
 
-    private Message processingRecivedMessage(Message message) throws JMSException {
+    public Message processingRecivedMessage(Message message) throws JMSException {
         Message returnedMessage = new ActiveMQTextMessage();
         SQLiteConnector connector = SQLiteConnector.getInstance();
         switch (message.getStringProperty("action")) {
