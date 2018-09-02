@@ -1,0 +1,15 @@
+com/sample/LoggerWriter$1.class
+com/sample/Main.class
+com/sample/LoggerWriter.class
+com/sample/ResponderToServer.class
+com/sample/enums/RequestStatuses.class
+org/hibernate/dialect/SQLiteDialect$1.class
+com/sample/MQMessageReceiver.class
+com/sample/SQLiteConnector.class
+com/sample/model/BankRequest.class
+org/hibernate/dialect/SQLiteDialect.class
+com/sample/enums/LoggerTypes.class
+com/sample/enums/OperationTypes.class
+com/sample/model/AuditData.class
+com/sample/MQListener.class
+com/sample/enums/ActionTypes.class
