@@ -48,7 +48,7 @@ class ResponderToServerTest {
         String bankRequestJSON = new ObjectMapper().writeValueAsString(bankRequest);
         message.setStringProperty("bankRequest", bankRequestJSON);
 
-        Message returnedMessage = responder.processingRecivedMessage(message);
+        Message returnedMessage = responder.processingReceivedMessage(message);
         String returnedBankRequestJSON = returnedMessage.getStringProperty("response");
         BankRequest returnedBankRequest = new ObjectMapper().readValue(returnedBankRequestJSON, BankRequest.class);
 
@@ -71,7 +71,7 @@ class ResponderToServerTest {
         String bankRequestJSON = new ObjectMapper().writeValueAsString(bankRequest);
         message.setStringProperty("bankRequest", bankRequestJSON);
 
-        Message returnedMessage = responder.processingRecivedMessage(message);
+        Message returnedMessage = responder.processingReceivedMessage(message);
 
         String returnedBankRequestJSON = returnedMessage.getStringProperty("response");
         BankRequest returnedBankRequest = new ObjectMapper().readValue(returnedBankRequestJSON, BankRequest.class);
@@ -94,7 +94,7 @@ class ResponderToServerTest {
         String bankRequestJSON = new ObjectMapper().writeValueAsString(bankRequest);
         message.setStringProperty("bankRequest", bankRequestJSON);
 
-        Message returnedMessage = responder.processingRecivedMessage(message);
+        Message returnedMessage = responder.processingReceivedMessage(message);
 
         String returnedResponse = returnedMessage.getStringProperty("response");
 
@@ -110,17 +110,18 @@ class ResponderToServerTest {
         connector.createRequest(bankRequest);
         connector.createRequest(bankRequest2);
 
-
         HashMap<String, String> params = new LinkedHashMap<>();
         params.put("client", "Свалов Дмитрий Андреевич");
 
+        String paramsJSON = new ObjectMapper().writeValueAsString(params);
+
         message.setStringProperty("action", "filter");
-        message.setObjectProperty("params", params);
+        message.setStringProperty("params", paramsJSON);
 
-        String bankRequestJSON = new ObjectMapper().writeValueAsString(bankRequest);
-        message.setStringProperty("bankRequest", bankRequestJSON);
+//        String bankRequestJSON = new ObjectMapper().writeValueAsString(bankRequest);
+//        message.setStringProperty("bankRequest", bankRequestJSON);
 
-        Message returnedMessage = responder.processingRecivedMessage(message);
+        Message returnedMessage = responder.processingReceivedMessage(message);
 
         List<BankRequest> filteredRequests = (List<BankRequest>) returnedMessage.getObjectProperty("response");
 

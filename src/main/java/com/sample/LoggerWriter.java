@@ -7,19 +7,19 @@ public class LoggerWriter {
 
     private final static Logger logger = Logger.getLogger(LoggerWriter.class);
 
-    public void createMessage(LoggerTypes type, String parameter) {
+    public static void createMessage(LoggerTypes type, String parameter) {
         switch (type) {
             case INFO:
-                logger.info("WARNING: " + parameter);
+                logger.info(parameter);
                 break;
             case WARN:
-                logger.warn("WARNING: " + parameter);
+                logger.warn(parameter);
                 break;
             case ERROR:
-                logger.error("ERROR: " + parameter);
+                logger.error(parameter);
                 break;
             case FATAL:
-                logger.fatal("FATAL: " + parameter);
+                logger.fatal(parameter);
                 break;
         }
     }

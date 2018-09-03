@@ -1,30 +1,27 @@
 package com.sample;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sample.enums.LoggerTypes;
 import com.sample.model.BankRequest;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQTextMessage;
 
 import javax.jms.*;
-import javax.swing.plaf.synth.SynthToolTipUI;
-import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class ResponderToServer implements Runnable {
 
     private final String CONNECTION_STRING = "tcp://localhost:61616";
-    private static BlockingQueue<Message> blockingQueue;
+    private static BlockingQueue<Message> blockingQueue = new LinkedBlockingQueue<>();
 
     public static BlockingQueue<Message> getBlockingQueue() {
         return blockingQueue;
     }
 
-    ResponderToServer() {
-        blockingQueue = new LinkedBlockingDeque<>();
-    }
+    ResponderToServer() { }
 
     @Override
     public void run() {
@@ -43,7 +40,9 @@ public class ResponderToServer implements Runnable {
             while (true) {
                 if (blockingQueue.size() > 0) {
                     message = blockingQueue.take();
-                    publisher.send(processingRecivedMessage(message));
+                    publisher.send(processingReceivedMessage(message));
+                    LoggerWriter.createMessage(LoggerTypes.INFO, "Message with action "
+                            + message.getStringProperty("action") + " was successfully sent");
                 }
 
                 try {
@@ -57,10 +56,9 @@ public class ResponderToServer implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
-    public Message processingRecivedMessage(Message message) throws JMSException {
+    public Message processingReceivedMessage(Message message) throws JMSException {
         Message returnedMessage = new ActiveMQTextMessage();
         SQLiteConnector connector = SQLiteConnector.getInstance();
         switch (message.getStringProperty("action")) {
