@@ -14,21 +14,18 @@ class MQListenerTest {
 
     private Message message;
     private MQListener mqListener;
-    private ResponderToServer responder;
 
     @BeforeEach
     void setUp() throws JMSException {
         message = new ActiveMQMessage();
         message.setStringProperty("test", "value of property test");
         mqListener = new MQListener();
-        responder = new ResponderToServer();
     }
 
     @AfterEach
     void tearDown() {
         message = null;
         mqListener = null;
-        responder = null;
     }
 
     @Test
